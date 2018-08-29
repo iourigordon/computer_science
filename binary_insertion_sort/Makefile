@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EXECUTABLE = insertion_sort
+EXECUTABLE = binary_insertion_sort
 
 UTILITY_DIR = ..
 UTILITY_SRC = $(wildcard $(UTILITY_DIR)/*.cc)
