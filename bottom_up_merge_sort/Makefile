@@ -11,7 +11,7 @@ OBJ_DIR = obj
 OBJ_FILES = $(subst $(UTILITY_DIR), $(OBJ_DIR), $(patsubst %.cc, %.o, $(UTILITY_SRC)))
 OBJ_FILES += $(patsubst %.cc, $(OBJ_DIR)/%.o, $(INSERTION_SRC))
 
-CXXFLAGS += -g -I$(UTILITY_DIR)/
+CXXFLAGS += -I$(UTILITY_DIR)/
 
 $(EXECUTABLE): obj_dir $(OBJ_FILES)
 	@echo "Linking " $@
