@@ -1,3 +1,4 @@
+#include <cmath>
 #include <iostream>
 #include <vector>
 
@@ -12,6 +13,13 @@ using namespace std;
 #define PARENT(i) (i)/2
 #define LEFT_CHILD(i) i*2+1
 #define RIGHT_CHILD(i) i*2+2
+
+void print_heap(vector<int>& heap) 
+{
+    int heap_height = log2(heap.size());
+
+    cout << "Heap Height = " << heap_height << endl;
+}
 
 void heapify(vector<int>& to_sort)
 {
@@ -56,6 +64,7 @@ int main(int argc, char* argv[])
 
         int_vector.erase(int_vector.begin());
         cout << "-----------------------" << endl;
+        print_heap(int_vector);
     }
 
 	return 0;
