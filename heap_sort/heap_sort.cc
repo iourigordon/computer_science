@@ -1,6 +1,10 @@
+#include <string.h>
+#include <stdlib.h>
+
 #include <cmath>
 #include <iostream>
 #include <vector>
+#include <queue>
 
 using namespace std;
 
@@ -16,9 +20,36 @@ using namespace std;
 
 void print_heap(vector<int>& heap) 
 {
-    int heap_height = log2(heap.size());
+    int root;
+    int curr_line, next_line;
+    queue<int> heap_queue;
 
-    cout << "Heap Height = " << heap_height << endl;
+    root = 0;
+
+    cout << heap[root] << endl;
+    curr_line = 1;
+    next_line = 0;
+    heap_queue.push(root);
+
+    for (;!heap_queue.empty();) {
+        root = heap_queue.front();
+        heap_queue.pop();
+        if (LEFT_CHILD(root) < heap.size()) {
+            cout << heap[LEFT_CHILD(root)] << " ";
+            heap_queue.push(LEFT_CHILD(root));
+            next_line+=1;
+        }
+        if (RIGHT_CHILD(root) < heap.size()) {
+            cout << heap[RIGHT_CHILD(root)] << " ";
+            heap_queue.push(RIGHT_CHILD(root));
+            next_line+=1;
+        }
+        if (--curr_line == 0) {
+            cout << endl;
+            curr_line = next_line;
+            next_line = 0;
+        }
+    }
 }
 
 void heapify(vector<int>& to_sort)
@@ -62,9 +93,9 @@ int main(int argc, char* argv[])
 
         print_int_array(int_vector);
 
+        print_heap(int_vector);
         int_vector.erase(int_vector.begin());
         cout << "-----------------------" << endl;
-        print_heap(int_vector);
     }
 
 	return 0;
