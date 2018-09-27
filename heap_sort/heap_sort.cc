@@ -18,19 +18,34 @@ using namespace std;
 #define LEFT_CHILD(i) i*2+1
 #define RIGHT_CHILD(i) i*2+2
 
+#define PRNT_BUFF_LENGTH 1024
+
 void print_heap(vector<int>& heap) 
 {
     int root;
     int curr_line, next_line;
+    char prnt_buff[PRNT_BUFF_LENGTH];
+    int heap_height = log2(heap.size())+1;
+    int prnt_offset = heap_height;
     queue<int> heap_queue;
 
     root = 0;
 
+    for (int i=0;i<prnt_offset;i++)
+        sprintf(prnt_buff+i," ");
+    cout << prnt_buff;
     cout << heap[root] << endl;
+    prnt_offset -= 1;
     curr_line = 1;
     next_line = 0;
     heap_queue.push(root);
+    
 
+    memset(prnt_buff,0,PRNT_BUFF_LENGTH);
+    for (int i=0;i<prnt_offset;i++)
+        sprintf(prnt_buff+i," ");
+    cout << prnt_buff;
+ 
     for (;!heap_queue.empty();) {
         root = heap_queue.front();
         heap_queue.pop();
@@ -46,8 +61,13 @@ void print_heap(vector<int>& heap)
         }
         if (--curr_line == 0) {
             cout << endl;
-            curr_line = next_line;
+              curr_line = next_line;
             next_line = 0;
+            prnt_offset -= 1;
+            memset(prnt_buff,0,PRNT_BUFF_LENGTH);
+            for (int i = 0; i < prnt_offset;i++)
+                sprintf(prnt_buff+i," ");
+            cout << prnt_buff;
         }
     }
 }
