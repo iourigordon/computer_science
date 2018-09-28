@@ -25,24 +25,28 @@ void print_heap(vector<int>& heap)
     int root;
     int curr_line, next_line;
     char prnt_buff[PRNT_BUFF_LENGTH];
-    int heap_height = log2(heap.size())+1;
+    int heap_height = pow(2,floor(log2(heap.size())))*4;
     int prnt_offset = heap_height;
+    int chld_delta = prnt_offset;
     queue<int> heap_queue;
 
+    cout << "heap.size() = " << heap.size() << endl;
+    cout << "floor(log2(heap.size()) = " << floor(log2(heap.size())) << endl;
+    cout << "pow(2,floor(log2(heap.size()))) = " << pow(2,log2(heap.size())) << endl;
+    cout << "chld_delta = " << chld_delta << endl;
     root = 0;
 
     for (int i=0;i<prnt_offset;i++)
         sprintf(prnt_buff+i," ");
     cout << prnt_buff;
     cout << heap[root] << endl;
-    prnt_offset -= 1;
     curr_line = 1;
     next_line = 0;
     heap_queue.push(root);
     
 
     memset(prnt_buff,0,PRNT_BUFF_LENGTH);
-    for (int i=0;i<prnt_offset;i++)
+    for (int i=0;i<(chld_delta-2)/2;i++)
         sprintf(prnt_buff+i," ");
     cout << prnt_buff;
  
@@ -50,24 +54,35 @@ void print_heap(vector<int>& heap)
         root = heap_queue.front();
         heap_queue.pop();
         if (LEFT_CHILD(root) < heap.size()) {
-            cout << heap[LEFT_CHILD(root)] << " ";
+            cout << heap[LEFT_CHILD(root)];
             heap_queue.push(LEFT_CHILD(root));
             next_line+=1;
         }
+        memset(prnt_buff,0,PRNT_BUFF_LENGTH);
+        for (int i=0;i<chld_delta;i++)
+            sprintf(prnt_buff+i," ");
+        cout << prnt_buff;
+        
         if (RIGHT_CHILD(root) < heap.size()) {
-            cout << heap[RIGHT_CHILD(root)] << " ";
+            cout << heap[RIGHT_CHILD(root)];
             heap_queue.push(RIGHT_CHILD(root));
             next_line+=1;
         }
         if (--curr_line == 0) {
             cout << endl;
-              curr_line = next_line;
+            curr_line = next_line;
             next_line = 0;
-            prnt_offset -= 1;
+            chld_delta = (chld_delta-2)/2;
             memset(prnt_buff,0,PRNT_BUFF_LENGTH);
-            for (int i = 0; i < prnt_offset;i++)
+            for (int i = 0; i < (chld_delta-2)/2;i++)
                 sprintf(prnt_buff+i," ");
             cout << prnt_buff;
+        } else {
+            memset(prnt_buff,0,PRNT_BUFF_LENGTH);
+            for (int i = 0; i < chld_delta;i++)
+                sprintf(prnt_buff+i," ");
+            cout << prnt_buff;
+ 
         }
     }
 }
