@@ -27,7 +27,7 @@ void print_heap(vector<int>& heap)
     char prnt_buff[PRNT_BUFF_LENGTH];
     int heap_height = pow(2,floor(log2(heap.size())))*4;
     int prnt_offset = heap_height;
-    int chld_delta = prnt_offset;
+    int chld_delta = (prnt_offset-2)/2-1;
     queue<int> heap_queue;
 
     cout << "heap.size() = " << heap.size() << endl;
@@ -36,7 +36,7 @@ void print_heap(vector<int>& heap)
     cout << "chld_delta = " << chld_delta << endl;
     root = 0;
 
-    for (int i=0;i<prnt_offset;i++)
+    for (int i=0;i<chld_delta;i++)
         sprintf(prnt_buff+i," ");
     cout << prnt_buff;
     cout << heap[root] << endl;
