@@ -26,23 +26,29 @@ enum {
     PRNT_BOTH
 };
 
-int print_node_edges(char* buff, int offset, int type )
+#define PRINT_SPACES(buff,buff_len,num) \
+memset(buff,0,buff_len); \
+for (int i=0;i<num;i++) \
+    sprintf(buff+i," "); \
+cout << buff
+
+int print_node_edges(char* buff, int offset, int delta, int type )
 {
     switch (type) {
         case PRNT_LEFT_EDGE:
-            sprintf(buff+offset-offset/4,"/");
-            buff[offset-offset/4+1] = ' ';
-            return offset-offset/4+1;
+            sprintf(buff+offset-delta,"/");
+            buff[offset-delta+1] = ' ';
+            return offset-delta+1;
         case PRNT_RIGHT_EDGE:
-            sprintf(buff+offset+2+offset/4,"\\");
-            buff[offset+2+offset/4+1] = ' ';
-            return offset+2+offset/4+1; 
+            sprintf(buff+offset+2+delta,"\\");
+            buff[offset+2+delta+1] = ' ';
+            return offset+2+delta+1; 
         case PRNT_BOTH:
-            sprintf(buff+offset-offset/4,"/");
-            buff[offset-offset/4+1] = ' ';
-            sprintf(buff+offset+2+offset/4,"\\");
-            buff[offset+2+offset/4+1] = ' ';
-            return offset+2+offset/4+1; 
+            sprintf(buff+offset-delta,"/");
+            buff[offset-delta+1] = ' ';
+            sprintf(buff+offset+2+delta,"\\");
+            buff[offset+2+delta+1] = ' ';
+            return offset+2+delta+1; 
     }
     return 0;
 }
@@ -54,22 +60,16 @@ void print_heap(vector<int>& heap, int node_width)
     char prnt_buff[PRNT_BUFF_LENGTH];
     char edge_buff[PRNT_BUFF_LENGTH];
     int heap_height = pow(2,floor(log2(heap.size())))*4;
-    int prnt_offset = heap_height;
-    int chld_delta = (prnt_offset-node_width)/2-1;
+    int chld_delta = (heap_height-node_width)/2-1;
     queue<int> heap_queue;
 
-    cout << "heap.size() = " << heap.size() << endl;
-    cout << "floor(log2(heap.size()) = " << floor(log2(heap.size())) << endl;
-    cout << "pow(2,floor(log2(heap.size()))) = " << pow(2,log2(heap.size())) << endl;
-    cout << "chld_delta = " << chld_delta << endl;
     root = 0;
 
-    for (int i=0;i<chld_delta;i++)
-        sprintf(prnt_buff+i," ");
-    cout << prnt_buff;
+    PRINT_SPACES(prnt_buff,PRNT_BUFF_LENGTH,chld_delta);
     cout << heap[root] << endl;
+
     memset(edge_buff,' ',PRNT_BUFF_LENGTH);
-    edge_buff[print_node_edges(edge_buff,chld_delta,PRNT_BOTH)+1] = '\0'; 
+    edge_buff[print_node_edges(edge_buff,chld_delta,chld_delta/4,PRNT_BOTH)+1] = '\0'; 
     cout << edge_buff << endl;
 
     curr_line = 1;
@@ -77,49 +77,51 @@ void print_heap(vector<int>& heap, int node_width)
     heap_queue.push(root);
     
     memset(edge_buff,' ',PRNT_BUFF_LENGTH);
-    memset(prnt_buff,0,PRNT_BUFF_LENGTH);
-    for (int i=0;i<(chld_delta-node_width)/2;i++)
-        sprintf(prnt_buff+i," ");
-    cout << prnt_buff;
+    PRINT_SPACES(prnt_buff,PRNT_BUFF_LENGTH,(chld_delta-node_width)/2);
  
+    int edge_pos = (chld_delta-node_width)/2;
     for (;!heap_queue.empty();) {
         root = heap_queue.front();
         heap_queue.pop();
         if (LEFT_CHILD(root) < heap.size()) {
             cout << heap[LEFT_CHILD(root)];
             if (LEFT_CHILD(LEFT_CHILD(root)) < heap.size()) {
-                print_node_edges(edge_buff,(chld_delta-node_width)/2,PRNT_LEFT_EDGE);
+                print_node_edges(edge_buff,edge_pos,chld_delta/4,PRNT_LEFT_EDGE);
+            }
+            if (RIGHT_CHILD(LEFT_CHILD(root)) < heap.size()) {
+                print_node_edges(edge_buff,edge_pos-1,chld_delta/4,PRNT_RIGHT_EDGE);
             }
             heap_queue.push(LEFT_CHILD(root));
             next_line+=1;
         }
-        memset(prnt_buff,0,PRNT_BUFF_LENGTH);
-        for (int i=0;i<chld_delta;i++)
-            sprintf(prnt_buff+i," ");
-        cout << prnt_buff;
+
+        edge_pos+=chld_delta+node_width;
+        PRINT_SPACES(prnt_buff,PRNT_BUFF_LENGTH,chld_delta);
         
         if (RIGHT_CHILD(root) < heap.size()) {
             cout << heap[RIGHT_CHILD(root)];
+            if (LEFT_CHILD(RIGHT_CHILD(root)) < heap.size()) {
+                print_node_edges(edge_buff,edge_pos,chld_delta/4,PRNT_LEFT_EDGE);
+            }
+            if (RIGHT_CHILD(RIGHT_CHILD(root)) < heap.size()) {
+                print_node_edges(edge_buff,edge_pos-1,chld_delta/4,PRNT_RIGHT_EDGE);
+            }
             heap_queue.push(RIGHT_CHILD(root));
             next_line+=1;
         }
-        if (--curr_line == 0) {
+        if ((--curr_line == 0) && (next_line != 0)) {
             cout << endl;
             edge_buff[heap_height] = '\0';
             cout << edge_buff << endl;
             curr_line = next_line;
             next_line = 0;
             chld_delta = (chld_delta-node_width)/2;
-            memset(prnt_buff,0,PRNT_BUFF_LENGTH);
             memset(edge_buff,' ',PRNT_BUFF_LENGTH);
-            for (int i = 0; i < (chld_delta-node_width)/2;i++)
-                sprintf(prnt_buff+i," ");
-            cout << prnt_buff;
+            PRINT_SPACES(prnt_buff,PRNT_BUFF_LENGTH,(chld_delta-node_width)/2);
+            edge_pos = (chld_delta-node_width)/2;
         } else {
-            memset(prnt_buff,0,PRNT_BUFF_LENGTH);
-            for (int i = 0; i < chld_delta;i++)
-                sprintf(prnt_buff+i," ");
-            cout << prnt_buff;
+            PRINT_SPACES(prnt_buff,PRNT_BUFF_LENGTH,chld_delta);
+            edge_pos+=chld_delta;
  
         }
     }
