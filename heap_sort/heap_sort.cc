@@ -53,13 +53,13 @@ int print_node_edges(char* buff, int offset, int delta, int type )
     return 0;
 }
 
-void print_heap(vector<int>& heap, int node_width) 
+void print_heap(vector<int>& heap, int node_width, int size) 
 {
     int root;
     int curr_line, next_line;
     char prnt_buff[PRNT_BUFF_LENGTH];
     char edge_buff[PRNT_BUFF_LENGTH];
-    int heap_height = pow(2,floor(log2(heap.size())))*4;
+    int heap_height = pow(2,floor(log2(size)))*4;
     int chld_delta = (heap_height-node_width)/2-1;
     queue<int> heap_queue;
 
@@ -85,10 +85,10 @@ void print_heap(vector<int>& heap, int node_width)
         heap_queue.pop();
         if (LEFT_CHILD(root) < heap.size()) {
             cout << heap[LEFT_CHILD(root)];
-            if (LEFT_CHILD(LEFT_CHILD(root)) < heap.size()) {
+            if (LEFT_CHILD(LEFT_CHILD(root)) < size) {
                 print_node_edges(edge_buff,edge_pos,chld_delta/4,PRNT_LEFT_EDGE);
             }
-            if (RIGHT_CHILD(LEFT_CHILD(root)) < heap.size()) {
+            if (RIGHT_CHILD(LEFT_CHILD(root)) < size) {
                 print_node_edges(edge_buff,edge_pos-1,chld_delta/4,PRNT_RIGHT_EDGE);
             }
             heap_queue.push(LEFT_CHILD(root));
@@ -98,12 +98,12 @@ void print_heap(vector<int>& heap, int node_width)
         edge_pos+=chld_delta+node_width;
         PRINT_SPACES(prnt_buff,PRNT_BUFF_LENGTH,chld_delta);
         
-        if (RIGHT_CHILD(root) < heap.size()) {
+        if (RIGHT_CHILD(root) < size) {
             cout << heap[RIGHT_CHILD(root)];
-            if (LEFT_CHILD(RIGHT_CHILD(root)) < heap.size()) {
+            if (LEFT_CHILD(RIGHT_CHILD(root)) < size) {
                 print_node_edges(edge_buff,edge_pos,chld_delta/4,PRNT_LEFT_EDGE);
             }
-            if (RIGHT_CHILD(RIGHT_CHILD(root)) < heap.size()) {
+            if (RIGHT_CHILD(RIGHT_CHILD(root)) < size) {
                 print_node_edges(edge_buff,edge_pos-1,chld_delta/4,PRNT_RIGHT_EDGE);
             }
             heap_queue.push(RIGHT_CHILD(root));
@@ -155,6 +155,39 @@ void heapify(vector<int>& to_sort)
     }
 }
 
+void heap_sort(vector<int>& to_sort)
+{
+    int temp,swap,end;
+
+    end = to_sort.size()-1;
+    for (;end>0;) {
+        temp = to_sort[0];
+        to_sort[0] = to_sort[end];
+        to_sort[end] = temp;
+        //print_heap(to_sort,2,end);
+        //cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+        for (int swap=0,root=0;root<end-1;) {
+            root = swap;
+            if ((LEFT_CHILD(root)<=(end-1)) && (to_sort[LEFT_CHILD(root)] > to_sort[root])) {
+                swap = LEFT_CHILD(root);
+            }
+            if ((RIGHT_CHILD(root)<=(end-1)) && (to_sort[RIGHT_CHILD(root)] > to_sort[swap])) {
+                swap = RIGHT_CHILD(root);
+            }
+            if (swap == root)
+                break;
+            temp = to_sort[swap];
+            to_sort[swap] = to_sort[root];
+            to_sort[root] = temp;
+
+            //print_int_array(to_sort);
+            //print_heap(to_sort,2,end);
+        }
+        //cout << "*******************************************" << endl;
+        end--;
+    }
+}
+
 int main(int argc, char* argv[])
 {
 	vector<int> int_vector;
@@ -165,10 +198,12 @@ int main(int argc, char* argv[])
 	    print_int_array(int_vector);
 
         heapify(int_vector);
+        //print_int_array(int_vector);
+        //print_heap(int_vector,2,int_vector.size());
+        heap_sort(int_vector);
 
         print_int_array(int_vector);
 
-        print_heap(int_vector,2);
         int_vector.erase(int_vector.begin());
         cout << "-----------------------" << endl;
     }
