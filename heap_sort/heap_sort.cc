@@ -68,8 +68,18 @@ void print_heap(vector<int>& heap, int node_width, int size)
     PRINT_SPACES(prnt_buff,PRNT_BUFF_LENGTH,chld_delta);
     cout << heap[root] << endl;
 
+    if (size == 1)
+        return;
+
     memset(edge_buff,' ',PRNT_BUFF_LENGTH);
-    edge_buff[print_node_edges(edge_buff,chld_delta,chld_delta/4,PRNT_BOTH)+1] = '\0'; 
+    if ((LEFT_CHILD(root) < size) && (RIGHT_CHILD(root) < size))
+        edge_buff[print_node_edges(edge_buff,chld_delta,chld_delta/4,PRNT_BOTH)+1] = '\0'; 
+    else if (LEFT_CHILD(root) < size)
+        edge_buff[print_node_edges(edge_buff,chld_delta,chld_delta/4,PRNT_LEFT_EDGE)+1] = '\0';
+    else if (RIGHT_CHILD(root) < size)
+        edge_buff[print_node_edges(edge_buff,chld_delta,chld_delta/4,PRNT_RIGHT_EDGE)+1] = '\0';
+    else
+        edge_buff[0] = '\0';
     cout << edge_buff << endl;
 
     curr_line = 1;
@@ -83,7 +93,7 @@ void print_heap(vector<int>& heap, int node_width, int size)
     for (;!heap_queue.empty();) {
         root = heap_queue.front();
         heap_queue.pop();
-        if (LEFT_CHILD(root) < heap.size()) {
+        if (LEFT_CHILD(root) < size) {
             cout << heap[LEFT_CHILD(root)];
             if (LEFT_CHILD(LEFT_CHILD(root)) < size) {
                 print_node_edges(edge_buff,edge_pos,chld_delta/4,PRNT_LEFT_EDGE);
@@ -164,8 +174,6 @@ void heap_sort(vector<int>& to_sort)
         temp = to_sort[0];
         to_sort[0] = to_sort[end];
         to_sort[end] = temp;
-        //print_heap(to_sort,2,end);
-        //cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
         for (int swap=0,root=0;root<end-1;) {
             root = swap;
             if ((LEFT_CHILD(root)<=(end-1)) && (to_sort[LEFT_CHILD(root)] > to_sort[root])) {
@@ -179,11 +187,7 @@ void heap_sort(vector<int>& to_sort)
             temp = to_sort[swap];
             to_sort[swap] = to_sort[root];
             to_sort[root] = temp;
-
-            //print_int_array(to_sort);
-            //print_heap(to_sort,2,end);
         }
-        //cout << "*******************************************" << endl;
         end--;
     }
 }
@@ -198,8 +202,7 @@ int main(int argc, char* argv[])
 	    print_int_array(int_vector);
 
         heapify(int_vector);
-        //print_int_array(int_vector);
-        //print_heap(int_vector,2,int_vector.size());
+        print_heap(int_vector,2,int_vector.size());
         heap_sort(int_vector);
 
         print_int_array(int_vector);
