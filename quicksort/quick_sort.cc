@@ -15,16 +15,36 @@ using namespace std;
 // Super fast on small arrays, outperforms quicksort
 //
 
-void quick_sort(vector<int>& sort_array)
+int partition(vector<int>& sort_array, int start_idx, int end_idx)
 {
-    int temp,j;
-    for (int i=1;i<sort_array.size();i++) {
-        temp = sort_array[i];
-        for (j=i;j>0,temp<sort_array[j-1];j--) {
-            sort_array[j] = sort_array[j-1];
-        }
-        sort_array[j] = temp;
+    int i,j,temp;
+    int pivot = sort_array[start_idx];
+
+    for (i=start_idx-1,j=end_idx+1;i<end_idx && j>start_idx;) {
+        for (;sort_array[++i]<pivot && i<end_idx;)
+            ;
+        for (;sort_array[--j]>pivot && j>start_idx;)
+            ;
+        if (i<j) {
+            temp = sort_array[i];
+            sort_array[i] = sort_array[j];
+            sort_array[j] = temp;
+        } else
+            return j;
     }
+    return -1;
+}
+
+void quick_sort(vector<int>& sort_array, int start_idx, int end_idx)
+{
+    int pivot;
+
+    if (!(start_idx<end_idx))
+        return;
+    pivot = partition(sort_array,start_idx,end_idx);
+
+    quick_sort(sort_array,start_idx,pivot);
+    quick_sort(sort_array,pivot+1,end_idx);
 }
 
 int main(int argc, char* argv[])
@@ -36,7 +56,7 @@ int main(int argc, char* argv[])
     	generate_int_array(MAX_ARRAY_SIZE, MAX_ARRAY_ELEM, int_vector);
 	    print_int_array(int_vector);
 
-        quick_sort(int_vector);
+        quick_sort(int_vector,0,int_vector.size()-1);
         print_int_array(int_vector);
 
         int_vector.erase(int_vector.begin());
