@@ -17,8 +17,6 @@ void counting_sort(vector<int> sort_array, vector<int>& out_array)
         hist[sort_array[i]] = hist[sort_array[i]] + 1;
     }
 
-    print_int_array(hist);
-
     int elem_count;
     int pos_count = 0;
     for (int i=0;i<hist.size();i++) {
@@ -26,8 +24,6 @@ void counting_sort(vector<int> sort_array, vector<int>& out_array)
         hist[i] = pos_count;
         pos_count+=elem_count;
     }
-
-    print_int_array(hist);
 
     for (int i=0;i<sort_array.size();i++) {
         out_array[hist[sort_array[i]]] = sort_array[i];
