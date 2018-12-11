@@ -21,26 +21,10 @@ void insert_sort(vector<int>& src_array, int start_idx, int end_idx)
     }
 }
 
-//#define DEBUG_PRINT
-
 void merge(vector<int>& src_array, int left_idx, int right_idx, int end_idx)
 {
     int temp;
     int i,j,dst_idx;
-#ifdef DEBUG_PRINT
-    cout << "Left Side" << endl;
-    for (int i=left_idx;i<right_idx;i++) {
-        cout << src_array[i] << " ";
-    }
-    cout << endl;
-    cout << "====================" << endl;
-    cout << "Right Side" << endl;
-    for (int i=right_idx;i<end_idx;i++) {
-        cout << src_array[i] << " ";
-    }
-    cout << endl;
-    cout << "====================" << endl;
-#endif
     i=left_idx,j=right_idx;
     for (int dst_idx=i;dst_idx<end_idx;dst_idx++) {
         if ((j<end_idx) && ((i >= right_idx) || (src_array[i] > src_array[j]))) {
@@ -57,14 +41,6 @@ void merge(vector<int>& src_array, int left_idx, int right_idx, int end_idx)
             src_array[dst_idx] = src_array[i++];
         }
     }
-#ifdef DEBUG_PRINT
-    cout << "Merged Array" << endl;
-    for (int i=left_idx;i<end_idx;i++) {
-        cout << src_array[i] << " ";
-    }
-    cout << endl;
-    cout << "====================" << endl;
-#endif
 }
 
 //

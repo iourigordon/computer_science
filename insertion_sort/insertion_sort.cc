@@ -20,7 +20,7 @@ void insertion_sort(vector<int>& sort_array)
     int temp,j;
     for (int i=1;i<sort_array.size();i++) {
         temp = sort_array[i];
-        for (j=i;j>0,temp<sort_array[j-1];j--) {
+        for (j=i;(j>0)&&(temp<sort_array[j-1]);j--) {
             sort_array[j] = sort_array[j-1];
         }
         sort_array[j] = temp;
