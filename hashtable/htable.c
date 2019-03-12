@@ -89,20 +89,53 @@ int insert(const char* key, int val, htable_ptr tbl){
 	return 1;
 }
 
-int delete_val(char* key, int val, htable_ptr tbl){
+int delete_val(const char* key, int val, htable_ptr tbl){
+    int i;
+    int idx;
+
+    if (!tbl)
+        return 1;
+
+    idx = hash_key(key,tbl->size);
+    for (i=0;i<tbl->bucket_size;i++) {
+        if (tbl->hkeys[idx][i]==val) {
+            tbl->hkeys[idx][i]=0; 
+            return 0;
+        }
+    }    
+
+	return 1;
+}
+
+int delete_key(const char* key, htable_ptr tbl){
+    int i;
+    int idx;
+
+    if (!tbl)
+        return 1;
+
+    idx = hash_key(key,tbl->size);
+    memset(tbl->hkeys[idx],0,sizeof(int)*tbl->bucket_size);
+
 	return 0;
 }
 
-int delete_key(char* key, htable_ptr tbl){
-	return 0;
-}
+int* search(const char* key, int* bsize, htable_ptr tbl) {
+    int i;
+    int idx;
 
-int search(char* key, htable_ptr tbl){
-	return 0;
+    if (!tbl)
+        return NULL;
+
+    idx = hash_key(key,tbl->size);
+    *bsize = tbl->bucket_size;
+	return tbl->hkeys[idx];
 }
 
 int get_size(htable_ptr tbl){
-	return 0;
+    if (!tbl)
+        return -1;
+	return tbl->size;
 }
 
 void print_htable(htable_ptr tbl){
