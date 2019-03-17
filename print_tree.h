@@ -3,7 +3,7 @@
 
 struct Tree 
 {
-  Tree * left, * right;
+  Tree *left,*right;
   int element;
 };
 
